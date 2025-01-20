@@ -26,3 +26,6 @@ replay_pid*
 bin
 target
 node-modules
+.vscode
+.idea
+.settings
