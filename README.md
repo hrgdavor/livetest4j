@@ -12,7 +12,7 @@ but if you like the approach there are more advanced things you can do.
 - setup live reload in Spring
 - use a commercial solution like JRebel
 
-For now, this not published as a maven library just copy the utility class [LiveTest4j.java](src/main/java/hr/hrg/livetest4j/LiveTest4j.java)  to your project (with test code, no need for it in production).
+For now, this not published as a maven library just copy the utility class [LiveTest4j.java](src/main/java/hr/hrg/livetest4j/LiveTest4j.java)  to your project.
 
 In principle this is pretty simple, but to make it more usable it has bit more code.
 
