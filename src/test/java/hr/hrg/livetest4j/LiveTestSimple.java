@@ -6,7 +6,6 @@ public class LiveTestSimple {
 		new LiveTest4j(()->{
 			System.out.println("Hello live 1");
 		})
-		.watch(LiveTestSimple.class)// at minimum we need to watch our file
 		.run();
 	}
 }

@@ -4,8 +4,12 @@ import java.io.File;
 import java.io.Serializable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.invoke.SerializedLambda;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public class LiveTest4j {
@@ -24,19 +28,35 @@ public class LiveTest4j {
     String[] pathsToTest = PATHS;
     RunWithErr[] init = {};
     RunWithErr[] tearDown = {};
-    List<File> files = new ArrayList<>();
+    Set<File> files = new HashSet<>();
     RunWithErr test;
 
     public LiveTest4j(RunWithErr test) {
-    	this.test(test);
-    }
-    
-    public LiveTest4j test(RunWithErr test) {
+//    	https://stackoverflow.com/questions/3776204/how-to-find-out-if-debug-mode-is-enabled
+    	boolean isDebug = java.lang.management.ManagementFactory.getRuntimeMXBean()
+    			.getInputArguments().toString().contains("-agentlib:jdwp");    	if(!isDebug) {
+    		consoleWriter.accept("WARNING: you MUST run LiveTest4j in DEBUG mode.");
+    		consoleWriter.accept("WARNING: We could not detect DEBUG mode.");
+    		consoleWriter.accept("WARNING: If You are running in DEBUG mode, ignore this message");
+    	}
     	this.test = test;
-    	return this;
+    	checkLambda(test);
     }
     
-    public LiveTest4j delay(int watchDelay, int runDelay) {
+    
+    private void checkLambda(RunWithErr lambda) {
+    	SerializedLambda lambdaInfo = extractLambdaInfo(lambda);
+    	if(lambdaInfo != null) {
+    		try {
+    			String className = lambdaInfo.getImplClass().replaceAll("/", "\\.");
+    			watch( Class.forName(className));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+    	}
+	}
+
+	public LiveTest4j delay(int watchDelay, int runDelay) {
     	this.watchDelay = watchDelay;
     	this.runDelay = runDelay;
     	return this;
@@ -64,12 +84,6 @@ public class LiveTest4j {
      * @return
      */
     public LiveTest4j watch(Object obj) {
-//    	https://stackoverflow.com/questions/3776204/how-to-find-out-if-debug-mode-is-enabled
-    	boolean isDebug = java.lang.management.ManagementFactory.getRuntimeMXBean()
-    			.getInputArguments().toString().contains("-agentlib:jdwp");
-    	if(!isDebug) { 
-    		consoleWriter.accept("WARNING: you must run LiveTest4j in debug mode. We could not detect debug mode. If You are running in debug mode, ignOre this mesSage");
-    	}
     	Class<?> clazz = obj instanceof Class ? (Class)obj : obj.getClass();
         files.add(resolveClassFile(clazz, pathsToTest));
         WatchDepends watchDepends = clazz.getAnnotation(WatchDepends.class);
@@ -175,6 +189,24 @@ public class LiveTest4j {
 	    String[] resources() default {};
 	}
 
+	/** This only works for lambda that is based on a functional interface that is also Serializable.
+	 * 
+	 * @param test
+	 * @return
+	 */
+    public static SerializedLambda extractLambdaInfo(Serializable test) {
+    	// https://stackoverflow.com/questions/21860875/printing-debug-info-on-errors-with-java-8-lambda-expressions
+    	Serializable s = (Serializable) test;
+		try {
+			Method method = s.getClass().getDeclaredMethod("writeReplace");
+	        method.setAccessible(true);
+	        return (SerializedLambda) method.invoke(s);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+    }
+    
 	@FunctionalInterface
     public static interface RunWithErr extends Serializable{
         public void run() throws Throwable;
