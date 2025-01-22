@@ -12,6 +12,17 @@ but if you like the approach there are more advanced things you can do.
 - setup live reload in Spring
 - use a commercial solution like JRebel
 
+In principle this is pretty simple, but to make it more usable 
+
+## using
+
+To make it work, code MUST run in debug mode, as we are relying on Java built-in code replace. Basic Java 
+hot code replace only works for method bodies, and method must not be blocked in some thread. 
+
+Also we need to know what files to watch for changes (after file changes we need to wait a bit to give time for hot code replace to finish)
+
+
+
 
 ## IDE support
 

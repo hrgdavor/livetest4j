@@ -56,7 +56,13 @@ public class LiveTest4j {
     	this.tearDown = tearDown;
     	return this;
     }
-    
+
+    /**
+     * Add a class to watch (if object is provided then class of that object is used).
+     * It will search {@link #pathsToTest} folders to find generated class file
+     * @param obj Class or object
+     * @return
+     */
     public LiveTest4j watch(Object obj) {
 //    	https://stackoverflow.com/questions/3776204/how-to-find-out-if-debug-mode-is-enabled
     	boolean isDebug = java.lang.management.ManagementFactory.getRuntimeMXBean()
@@ -75,12 +81,19 @@ public class LiveTest4j {
         	}
         	if(watchDepends.resources() != null) {
         		for(var tmp:watchDepends.resources()) {
-        			files.add(new File(tmp));
+        			watch(tmp);
         		}
         	}
         }
         return this;
     }
+
+    /**
+     * Add a regular file to watch list.
+     */
+	public void watch(String filePath) {
+		files.add(new File(filePath));
+	}
     
     public static File resolveClassFile(Class<?> clazz, String[] pathsToTest) {
         String className = clazz.getName();
