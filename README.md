@@ -140,7 +140,9 @@ This trick relies on `method.setAccessible(true)` so this may not work in future
 
 ## Troubleshooting
 
-It really can not be stressed enough, you MUST run in DEBUG mode for this to work. Watch the initial output to check if all the files that need to be tracked are recognized.
+It really can not be stressed enough, you MUST run in DEBUG mode for this to work. 
+
+Watch the initial output to check if all the files that need to be tracked are recognized.
 
 ```
 WATCH: ..../target/test-classes/hr/hrg/livetest4j/LiveTestSimple.class
