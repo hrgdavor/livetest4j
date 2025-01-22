@@ -186,29 +186,32 @@ public class LiveTest4j {
 	@Retention(RetentionPolicy.RUNTIME)
 	public static @interface WatchDepends {
 		Class<?>[] value() default {};
-	    String[] resources() default {};
+
+		String[] resources() default {};
 	}
 
-	/** This only works for lambda that is based on a functional interface that is also Serializable.
+	/**
+	 * This only works for lambda that is based on a functional interface that is
+	 * also Serializable.
 	 * 
 	 * @param test
 	 * @return
 	 */
-    public static SerializedLambda extractLambdaInfo(Serializable test) {
-    	// https://stackoverflow.com/questions/21860875/printing-debug-info-on-errors-with-java-8-lambda-expressions
-    	Serializable s = (Serializable) test;
+	public static SerializedLambda extractLambdaInfo(Serializable test) {
+		// https://stackoverflow.com/questions/21860875/printing-debug-info-on-errors-with-java-8-lambda-expressions
+		Serializable s = (Serializable) test;
 		try {
 			Method method = s.getClass().getDeclaredMethod("writeReplace");
-	        method.setAccessible(true);
-	        return (SerializedLambda) method.invoke(s);
+			method.setAccessible(true);
+			return (SerializedLambda) method.invoke(s);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
-    }
-    
+	}
+
 	@FunctionalInterface
-    public static interface RunWithErr extends Serializable{
-        public void run() throws Throwable;
-    }
+	public static interface RunWithErr extends Serializable {
+		public void run() throws Throwable;
+	}
 }
