@@ -49,7 +49,7 @@ public class LiveTest4j {
     	if(lambdaInfo != null) {
     		try {
     			String className = lambdaInfo.getImplClass().replaceAll("/", "\\.");
-    			watch( Class.forName(className));
+    			watch(Class.forName(className));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -186,7 +186,6 @@ public class LiveTest4j {
 	@Retention(RetentionPolicy.RUNTIME)
 	public static @interface WatchDepends {
 		Class<?>[] value() default {};
-
 		String[] resources() default {};
 	}
 

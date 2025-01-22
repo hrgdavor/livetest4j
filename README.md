@@ -37,6 +37,30 @@ public class LiveTestSimple {
 
 *NOTICE!!: we manually add LiveTestSimple class to watch list, as automatic detection via lambda might not work, it is a bit hacky* 
 
+## Annotation support
+
+LiveTest4j also defines an annotation `@WatchDepends` that can be used to define additional dependencies to watch for changes. This way reload can be triggered by more classes, and also files (you may have some test data in files).
+
+- value  - list of classes to watch
+- resources - list of file paths to watch
+
+```Java
+	@Retention(RetentionPolicy.RUNTIME)
+	public static @interface WatchDepends {
+		Class<?>[] value() default {};
+		String[] resources() default {};
+	}
+```
+
+Example usage:
+
+```java
+```
+
+
+
+
+
 ## IDE support
 
 For now only tested in Eclipse, but should work in others.
