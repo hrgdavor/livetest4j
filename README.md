@@ -18,10 +18,7 @@ In principle this is pretty simple, but to make it more usable it has bit more c
 
 ## Using
 
-To make it work, code MUST run in debug mode, as we are relying on Java built-in code replace. Basic Java 
-hot code replace only works for method bodies, and method must not be blocked in some thread. 
-
-Also we need to know what files to watch for changes (after file changes we need to wait a bit to give time for hot code replace to finish)
+Passing a lambda:
 
 ```Java
 public class LiveTestSimple {
@@ -36,6 +33,24 @@ public class LiveTestSimple {
 ```
 
 *NOTICE!!: we manually add LiveTestSimple class to watch list, as automatic detection via lambda might not work, it is a bit hacky* 
+
+Passing a method reference
+
+```Java
+public class LiveTestMethod {
+	public static void main(String[] args) throws Exception{
+		new LiveTest4j(LiveTestMethod::method).run();
+	}
+	public static void method() {
+		System.out.println("Hello method 1");
+	}
+}
+```
+
+To make it work, code **MUST** run in **DEBUG** mode, as we are relying on Java built-in hot code replace. Basic Java 
+hot code replace only works for method bodies, and method must not be blocked in some thread. 
+
+Also we need to know what files to watch for changes (after file changes we need to wait a bit to give time for hot code replace to finish)
 
 ## Annotation support
 
@@ -55,11 +70,18 @@ LiveTest4j also defines an annotation `@WatchDepends` that can be used to define
 Example usage:
 
 ```java
+@WatchDepends(value= {LiveTestMethod.class}, resources = {LiveTestDependencies.TEXT_FILE})
+public class LiveTestDependencies {
+	static final String TEXT_FILE = "src/test/java/hr/hrg/livetest4j/dep.file.txt";
+	public static void main(String[] args) throws Exception{
+		new LiveTest4j(()->{
+			LiveTestMethod.method();
+			System.out.println(Files.readString(Path.of(TEXT_FILE)));
+		})
+		.run();
+	}
+}
 ```
-
-
-
-
 
 ## IDE support
 
