@@ -12,9 +12,9 @@ but if you like the approach there are more advanced things you can do.
 - setup live reload in Spring
 - use a commercial solution like JRebel
 
-For now, this not published as a maven library just copy the utility class [LiveTest4j.java](src/main/java/hr/hrg/livetest4j/LiveTest4j.java)  to your project.
+For now, this not published as a maven library. **Just copy** the utility class [LiveTest4j.java](src/main/java/hr/hrg/livetest4j/LiveTest4j.java)  to your project.
 
-In principle this is pretty simple, but to make it more usable it has bit more code.
+In principle this is pretty simple to implement, yet to make it more usable it needs bit more code.
 
 ## Using
 
@@ -140,7 +140,7 @@ This trick relies on `method.setAccessible(true)` so this may not work in future
 
 ## Troubleshooting
 
-It really can not be stressed enough, you MUST run in DEBUG mode for this to work. 
+It really can not be stressed enough, you **MUST run in DEBUG** mode for this to work. 
 
 Watch the initial output to check if all the files that need to be tracked are recognized.
 
